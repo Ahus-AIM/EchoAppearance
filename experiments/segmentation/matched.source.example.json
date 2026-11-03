@@ -1,0 +1,7 @@
+{
+  "echoxflow_manifest": "outputs/segmentation/manifest.json",
+  "camus_croissant": "data/CAMUS-beamspace/croissant.json",
+  "camus_repo_id": "Ahus-AIM/CAMUS-beamspace",
+  "camus_revision": "03c8c152f99576d93410a17f8d0c05540d1f06a1",
+  "camus_splits": "data/CAMUS-beamspace/splits.csv"
+}

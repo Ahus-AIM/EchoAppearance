@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "Please cite EchoAppearance and the EchoXFlow dataset when using this software."
+title: EchoAppearance
+type: software
+authors:
+  - family-names: Stenhede
+    given-names: Elias
+  - family-names: Ranjbar
+    given-names: Arian
+repository-code: "https://github.com/Ahus-AIM/EchoAppearance"
+license: CC-BY-NC-SA-4.0
+abstract: "Beamspace B-mode appearance distillation. The accompanying preprint is arXiv:2611.00184."
+preferred-citation:
+  type: article
+  title: "Does Vendor Image Processing Matter? Learning Echocardiography Display Appearance from Native Beamspace Data"
+  authors:
+    - family-names: Stenhede
+      given-names: Elias
+    - family-names: Ranjbar
+      given-names: Arian
+  journal: "arXiv preprint arXiv:2611.00184"
+  year: 2026
+  url: "https://arxiv.org/abs/2611.00184"

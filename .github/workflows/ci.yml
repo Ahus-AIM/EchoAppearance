@@ -1,0 +1,105 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  checks:
+    name: CPU checks (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.13']
+    env:
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '1'
+      CUDA_VISIBLE_DEVICES: ''
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: '0.12.1'
+          enable-cache: true
+      - name: Check conventional commit or PR title
+        run: python scripts/check_commits.py
+      - name: Install locked CPU dependencies
+        run: uv sync --frozen --extra dev --extra experiments
+      - name: Verify checkpoint checksum
+        working-directory: weights
+        run: sha256sum --check SHA256SUMS
+      - name: Run synthetic and bundled-model contracts
+        run: uv run --frozen pytest -q -ra
+      - name: Run tensor examples
+        run: |
+          uv run --frozen python examples/synthetic.py
+          uv run --frozen python examples/filter.py
+      - name: Build wheel and source archive
+        run: uv build
+      - name: Check installed wheel
+        run: |
+          uv pip install --python .venv/bin/python --reinstall --no-deps dist/*.whl
+          .venv/bin/python -I examples/synthetic.py
+  release:
+    name: Semantic release
+    needs: checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: semantic-release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: '0.12.1'
+      - name: Refuse a stale main revision
+        id: head
+        env:
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" = "$WORKFLOW_SHA" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+            git checkout -B main "$WORKFLOW_SHA"
+          else
+            echo 'current=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Configure release identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Create version, changelog, tag and GitHub release
+        id: version
+        if: steps.head.outputs.current == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv tool run --from python-semantic-release==10.7.0 semantic-release version
+      - name: Attach distributions
+        if: steps.version.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv tool run --from python-semantic-release==10.7.0 semantic-release publish
+      - name: Attach model and checksum
+        if: steps.version.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          gh release upload "$RELEASE_TAG" weights/appearance.pt weights/SHA256SUMS LICENSE --clobber

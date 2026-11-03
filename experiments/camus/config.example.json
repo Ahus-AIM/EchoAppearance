@@ -1,0 +1,34 @@
+{
+  "repo_id": "Ahus-AIM/CAMUS-beamspace",
+  "revision": "03c8c152f99576d93410a17f8d0c05540d1f06a1",
+  "checkpoint": "weights/appearance.pt",
+  "output_dir": "outputs/camus",
+  "cache_dir": "outputs/camus-source",
+  "recordings": [
+    {
+      "exam_id": "8783c0fad303d9692f0a49d6",
+      "recording_id": "af174a9e9ed0b81a056aaa17",
+      "view": "A2C"
+    },
+    {
+      "exam_id": "ce73ee954335ae87dbebc5c2",
+      "recording_id": "586354a7d3896460132dacf0",
+      "view": "A2C"
+    },
+    {
+      "exam_id": "cfd0afeb7f7a95d28cfa0d67",
+      "recording_id": "5e5354fca0421953b5090c8e",
+      "view": "A4C"
+    },
+    {
+      "exam_id": "fce7910f63c2b92d7a2b76e6",
+      "recording_id": "18e3c203b6a90941fc0d1421",
+      "view": "A4C"
+    },
+    {
+      "exam_id": "100d35d9611b9e41c771aeca",
+      "recording_id": "be2100b8431403397dbed4a6",
+      "view": "A4C"
+    }
+  ]
+}

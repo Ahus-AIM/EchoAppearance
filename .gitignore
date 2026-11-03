@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+local/
+outputs/
+data/
+checkpoints/
+cache/
+caches/
+.matplotlib-cache/
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.zarr/
+*.zarr.zip
+*.npz
+*.npy
+*.dcm
+*.nii*
+
+# Deliberately distributed inference-only model.
+!weights/appearance.pt
+
+# One native example recording and its inference metadata.
+!examples/recordings/frames.pt
+!examples/recordings/metadata.pt

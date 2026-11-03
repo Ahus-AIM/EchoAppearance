@@ -1,0 +1,11 @@
+{
+  "release_root": "../EchoXFlow",
+  "data_root": "data/EchoXFlow",
+  "benchmark_root": "outputs/original-task3/benchmark",
+  "patient_groups": "data/patient_groups.csv",
+  "enhancer_checkpoint": "weights/appearance.pt",
+  "enhancer_splits": null,
+  "output_dir": "outputs/paired-task3",
+  "threads": 4,
+  "enhancer_batch_frames": 4
+}
