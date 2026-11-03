@@ -1,6 +1,6 @@
 [project]
 name = "echoappearance"
-version = "0.0.0"
+version = "0.0.1"
 description = "Efficient residual-CNN distillation of GE B-mode DICOM display appearance"
 readme = "README.md"
 license = "CC-BY-NC-SA-4.0"
